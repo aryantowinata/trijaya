@@ -23,11 +23,17 @@ class CheckoutController extends Controller
             $total_harga += $cart->produk->harga_produk * $cart->jumlah;
         }
 
+        // Tentukan informasi VA Name dan VA Number (misalnya, menggunakan BCA dan nomor VA sementara)
+        $payment_va_name = 'CIBAI'; // Bisa disesuaikan dengan bank atau metode pembayaran yang digunakan
+        $payment_va_number = '123'; // Nomor VA sementara, nantinya akan diperbarui oleh Midtrans
+
         // Buat order baru
         $order = Orders::create([
             'id_user' => Auth::id(),
             'total_harga' => $total_harga,
-            'status' => 'pending', // Atur status sesuai kebutuhan
+            'status' => 'pending',
+            'payment_va_name' => $payment_va_name,
+            'payment_va_number' => $payment_va_number,
         ]);
 
         // Buat order items dari keranjang
@@ -82,22 +88,35 @@ class CheckoutController extends Controller
     }
 
 
+
     public function midtransCallback(Request $request)
     {
+        $serverKey = config('midtrans.server_key');
         // Proses callback dari Midtrans
-        $notification = new \Midtrans\Notification($request->all());
+        $notification = hash("sha512", $request->order_id . $request->status_code . $request->gross_amount . $serverKey);
 
-        // Temukan order berdasarkan order_id
-        $order = Orders::find($notification->id_orders);
 
-        // Update status pesanan berdasarkan status dari Midtrans
-        if ($notification->transaction_status == 'settlement') {
-            $order->update(['status' => 'completed']);
-        } elseif ($notification->transaction_status == 'pending') {
-            $order->update(['status' => 'pending']);
-        } elseif ($notification->transaction_status == 'cancel' || $notification->transaction_status == 'expire') {
-            $order->update(['status' => 'canceled']);
+        if ($notification == $request->signature_key) {
+            if ($request->transaction_status == 'settlement') {
+                $order = Orders::find($request->order_id);
+                $order->update(['status' => 'completed']);
+            } elseif ($request->transaction_status == 'pending') {
+                $order = Orders::find($request->order_id);
+                $order->update(['status' => 'pending']);
+            } elseif ($request->transaction_status == 'cancel') {
+                $order = Orders::find($request->order_id);
+                $order->update(['status' => 'cancel']);
+            }
+
+            if (isset($request->va_number)) {
+                // Update informasi VA pada tabel orders
+                $order->update([
+                    'payment_va_name' => $request->bank,
+                    'payment_va_number' => $request->va_number,
+                ]);
+            }
         }
+
 
         return response()->json(['status' => 'success']);
     }

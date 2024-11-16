@@ -28,7 +28,7 @@
                 <td>{{ $loop->iteration }}</td>
                 <td>{{ $product->nama_produk }}</td>
                 <td>{{ $product->kategori ? $product->kategori->nama_kategori : 'Tidak ada kategori' }}</td>
-                <td>{{ number_format($product->harga_produk, 2, ',', '.') }}</td>
+                <td>Rp.{{ number_format($product->harga_produk, 2, ',', '.') }}</td>
                 <td>{{ $product->jumlah_produk }}</td>
                 <td>
                     @if($product->gambar_produk)

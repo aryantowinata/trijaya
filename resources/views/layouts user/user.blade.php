@@ -73,6 +73,12 @@
                     <span>{{ __('Profile') }}</span>
                 </a>
             </li>
+            <li class="nav-item {{ Nav::isRoute('user.orders') }}">
+                <a class="nav-link" href="{{ route('user.orders') }}">
+                    <i class="fas fa-fw fa-user"></i>
+                    <span>{{ __('Daftar Pesanan') }}</span>
+                </a>
+            </li>
 
 
 

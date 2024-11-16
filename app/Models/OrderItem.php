@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use phpseclib3\Crypt\Blowfish;
 
 class OrderItem extends Model
 {
@@ -15,6 +16,7 @@ class OrderItem extends Model
         'jumlah',
         'harga_satuan',
     ];
+
 
     // Relasi ke tabel produk
     public function produk()

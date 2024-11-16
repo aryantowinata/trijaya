@@ -10,8 +10,10 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\KategoriController;
 use App\Http\Controllers\CartController;
 use App\Http\Controllers\OrderController;
+use App\Http\Controllers\OrderManagementController;
 use App\Http\Controllers\CheckoutController;
 use App\Http\Controllers\PaymentController;
+use App\Http\Controllers\EncryptionController;
 
 /*
 |--------------------------------------------------------------------------
@@ -29,6 +31,7 @@ Route::get('/cart', [PageController::class, 'cart'])->name('cart');
 Route::get('/shop', [PageController::class, 'shop'])->name('shop');
 Route::get('/abouts', [PageController::class, 'abouts'])->name('abouts');
 Route::resource('produk', ProdukController::class);
+Route::resource('history_order', OrderManagementController::class);
 Route::resource('kategori', KategoriController::class);
 Route::get('/shop/category/{id}', [PageController::class, 'showByCategory'])->name('shop.category');
 
@@ -78,9 +81,9 @@ Route::get('/user/orders', [OrderController::class, 'index'])->name('user.orders
 Route::get('/user/orders/{id}', [OrderController::class, 'show'])->name('user.orders.show');
 
 Route::post('/user/checkout', [CheckoutController::class, 'checkout'])->name('user.checkout');
+// Route untuk halaman Manajemen Pemesanan
 
 Route::post('/midtrans/callback', [CheckoutController::class, 'midtransCallback'])->name('midtrans.callback');
-
 
 Route::get('/about', function () {
     return view('about');

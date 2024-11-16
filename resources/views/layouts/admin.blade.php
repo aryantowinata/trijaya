@@ -75,6 +75,15 @@
                 </a>
             </li>
 
+
+            <!-- Nav Item - Manajemen Pemesanan -->
+            <li class="nav-item {{ Nav::isRoute('history_order.index') }}">
+                <a class="nav-link" href="{{ route('history_order.index') }}">
+                    <i class="fas fa-fw fa-hands-helping"></i>
+                    <span>{{ __('Order History') }}</span>
+                </a>
+            </li>
+
             <!-- Nav Item - About -->
             <li class="nav-item {{ Nav::isRoute('about') }}">
                 <a class="nav-link" href="{{ route('about') }}">
@@ -82,7 +91,6 @@
                     <span>{{ __('About') }}</span>
                 </a>
             </li>
-
             <!-- Divider -->
             <hr class="sidebar-divider d-none d-md-block">
 

@@ -6,6 +6,8 @@
 <p><strong>ID Pesanan:</strong> {{ $order->id }}</p>
 <p><strong>Total Harga:</strong> Rp{{ number_format($order->total_harga, 2, ',', '.') }}</p>
 <p><strong>Status:</strong> {{ $order->status }}</p>
+<p><strong>Jenis Pembayaran:</strong> {{ $order->payment_va_name }}</p>
+<p><strong>No Pembayaran:</strong> {{ $order->payment_va_number }}</p>
 <p><strong>Tanggal Pesanan:</strong> {{ $order->created_at->format('d-m-Y') }}</p>
 
 <h4>Detail Item Pesanan</h4>
