@@ -24,8 +24,8 @@ class CheckoutController extends Controller
         }
 
         // Tentukan informasi VA Name dan VA Number (misalnya, menggunakan BCA dan nomor VA sementara)
-        $payment_va_name = 'CIBAI'; // Bisa disesuaikan dengan bank atau metode pembayaran yang digunakan
-        $payment_va_number = '123'; // Nomor VA sementara, nantinya akan diperbarui oleh Midtrans
+        $payment_va_name = ''; // Bisa disesuaikan dengan bank atau metode pembayaran yang digunakan
+        $payment_va_number = ''; // Nomor VA sementara, nantinya akan diperbarui oleh Midtrans
 
         // Buat order baru
         $order = Orders::create([
@@ -83,6 +83,7 @@ class CheckoutController extends Controller
         // Dapatkan URL untuk pembayaran
         $snapToken = Snap::getSnapToken($midtransTransaction);
 
+
         // Redirect ke halaman Midtrans
         return view('/user/midtrans', compact('snapToken'));
     }
@@ -92,31 +93,35 @@ class CheckoutController extends Controller
     public function midtransCallback(Request $request)
     {
         $serverKey = config('midtrans.server_key');
-        // Proses callback dari Midtrans
-        $notification = hash("sha512", $request->order_id . $request->status_code . $request->gross_amount . $serverKey);
+        // Validasi signature key dari Midtrans
+        $signatureKey = hash("sha512", $request->order_id . $request->status_code . $request->gross_amount . $serverKey);
 
+        if ($signatureKey === $request->signature_key) {
+            $order = Orders::find($request->order_id);
 
-        if ($notification == $request->signature_key) {
-            if ($request->transaction_status == 'settlement') {
-                $order = Orders::find($request->order_id);
-                $order->update(['status' => 'completed']);
-            } elseif ($request->transaction_status == 'pending') {
-                $order = Orders::find($request->order_id);
-                $order->update(['status' => 'pending']);
-            } elseif ($request->transaction_status == 'cancel') {
-                $order = Orders::find($request->order_id);
-                $order->update(['status' => 'cancel']);
-            }
+            if ($order) {
+                // Update status order berdasarkan status transaksi
+                if ($request->transaction_status === 'settlement') {
+                    $order->update(['status' => 'completed']);
+                } elseif ($request->transaction_status === 'pending') {
+                    $order->update(['status' => 'pending']);
+                } elseif ($request->transaction_status === 'cancel') {
+                    $order->update(['status' => 'cancel']);
+                }
 
-            if (isset($request->va_number)) {
-                // Update informasi VA pada tabel orders
-                $order->update([
-                    'payment_va_name' => $request->bank,
-                    'payment_va_number' => $request->va_number,
-                ]);
+                // Ambil VA Number dan Bank dari respons Midtrans jika payment_type adalah bank_transfer
+                if ($request->payment_type === 'bank_transfer' && isset($request->va_numbers[0])) {
+                    $vaNumber = $request->va_numbers[0]['va_number'];
+                    $bank = $request->va_numbers[0]['bank'];
+
+                    // Update kolom payment_va_name dan payment_va_number di database
+                    $order->update([
+                        'payment_va_name' => $bank,
+                        'payment_va_number' => $vaNumber,
+                    ]);
+                }
             }
         }
-
 
         return response()->json(['status' => 'success']);
     }
