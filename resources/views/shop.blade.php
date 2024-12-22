@@ -64,8 +64,7 @@
                             <p class="card-text">Rp{{ number_format($product->harga_produk, 2, ',', '.') }}</p>
 
                             <div class="mt-auto">
-                                <div class="d-flex justify-content-between">
-                                    <button class="btn btn-danger btn-sm">Add to cart</button>
+                                <div class="d-flex justify-content-center">
                                     <a class="btn btn-success btn-sm" href="https://api.whatsapp.com/send?phone=6282287554320&amp;text=Halo,%20saya%20ingin%20bertanya%20tentang%20produk" role="button" target="_blank">Buy via WA</a>
                                 </div>
                             </div>

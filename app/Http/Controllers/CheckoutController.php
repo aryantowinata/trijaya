@@ -23,17 +23,13 @@ class CheckoutController extends Controller
             $total_harga += $cart->produk->harga_produk * $cart->jumlah;
         }
 
-        // Tentukan informasi VA Name dan VA Number (misalnya, menggunakan BCA dan nomor VA sementara)
-        $payment_va_name = ''; // Bisa disesuaikan dengan bank atau metode pembayaran yang digunakan
-        $payment_va_number = ''; // Nomor VA sementara, nantinya akan diperbarui oleh Midtrans
-
         // Buat order baru
         $order = Orders::create([
             'id_user' => Auth::id(),
             'total_harga' => $total_harga,
             'status' => 'pending',
-            'payment_va_name' => $payment_va_name,
-            'payment_va_number' => $payment_va_number,
+            'payment_va_name' => '', // Akan diperbarui oleh Midtrans
+            'payment_va_number' => '', // Akan diperbarui oleh Midtrans
         ]);
 
         // Buat order items dari keranjang
@@ -54,9 +50,12 @@ class CheckoutController extends Controller
         Config::$clientKey = env('MIDTRANS_CLIENT_KEY');
         Config::$isProduction = env('MIDTRANS_IS_PRODUCTION');
 
+        // Tambahkan timestamp ke order_id untuk membuatnya unik
+        $orderId = $order->id . '-' . time();
+
         // Persiapkan data untuk pembayaran
         $transactionDetails = [
-            'order_id' => $order->id,
+            'order_id' => $orderId,
             'gross_amount' => $total_harga,
         ];
 
@@ -71,7 +70,6 @@ class CheckoutController extends Controller
         }
 
         $midtransTransaction = [
-            'payment_type' => 'credit_card', // Anda bisa menyesuaikan dengan jenis pembayaran yang lain
             'transaction_details' => $transactionDetails,
             'item_details' => $itemDetails,
             'customer_details' => [
@@ -83,6 +81,8 @@ class CheckoutController extends Controller
         // Dapatkan URL untuk pembayaran
         $snapToken = Snap::getSnapToken($midtransTransaction);
 
+        // Simpan order_id Midtrans ke dalam database
+        $order->update(['order_id' => $orderId]);
 
         // Redirect ke halaman Midtrans
         return view('/user/midtrans', compact('snapToken'));
@@ -90,14 +90,17 @@ class CheckoutController extends Controller
 
 
 
+
     public function midtransCallback(Request $request)
     {
         $serverKey = config('midtrans.server_key');
+
         // Validasi signature key dari Midtrans
         $signatureKey = hash("sha512", $request->order_id . $request->status_code . $request->gross_amount . $serverKey);
 
         if ($signatureKey === $request->signature_key) {
-            $order = Orders::find($request->order_id);
+            // Ambil order berdasarkan order_id Midtrans
+            $order = Orders::where('order_id', $request->order_id)->first();
 
             if ($order) {
                 // Update status order berdasarkan status transaksi

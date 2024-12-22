@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Models\Produk;
 use App\Models\User;
 use App\Models\Cart;
+use App\Models\Orders;
 use Illuminate\Support\Facades\Auth;
 
 class UserDashboardController extends Controller
@@ -27,7 +28,8 @@ class UserDashboardController extends Controller
      */
     public function index()
     {
-        return view('/user/home');
+        $orders = Orders::where('id_user', Auth::id())->count();
+        return view('/user/home', compact('orders'));
     }
 
 
@@ -39,26 +41,4 @@ class UserDashboardController extends Controller
 
         return view('/user/daftar_produk', compact('produks', 'orderCount'));
     }
-
-
-
-
-
-    // public function cancelOrder($id)
-    // {
-    //     // Temukan order berdasarkan ID
-    //     $cart = Cart::findOrFail($id);
-
-    //     // Pastikan order milik user yang sedang login
-    //     if ($cart->id_user !== Auth::id()) {
-    //         return redirect()->back()->with('error', 'Anda tidak berhak membatalkan order ini.');
-    //     }
-
-    //     // Update status cart menjadi 'canceled'
-    //     $cart->status = 'canceled';
-    //     $cart->delete();
-
-    //     // Redirect kembali dengan pesan sukses
-    //     return redirect()->route('user.orders')->with('success', 'Order berhasil dibatalkan.');
-    // }
 }

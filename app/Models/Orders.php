@@ -39,7 +39,7 @@ class Orders extends Model
     {
         parent::__construct($attributes);
         // Mengambil kunci enkripsi dari file .env, jika tidak ada, pakai 'default_kunci'
-        $this->encryptionKey = env('BLOWFISH_ENCRYPTION_KEY', 'default_kunci');
+        $this->encryptionKey = env('BLOWFISH_ENCRYPTION_KEY');
     }
 
     // Mengatur data 'payment_va_name' sebelum disimpan (enkripsi)

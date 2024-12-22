@@ -39,9 +39,29 @@ class CartController extends Controller
 
     public function index()
     {
+        // Ambil data keranjang pengguna yang sedang login beserta produk terkait
         $carts = Cart::with('produk')->where('id_user', Auth::id())->get();
         $orderCount = Cart::where('id_user', Auth::id())->count();
-        return view('user.cart.index', compact('carts', 'orderCount'));
+
+        // Hitung total harga, jumlah order, dan jenis produk
+        $totalHarga = 0;
+        $jumlahOrder = 0;
+        $jenisProduk = [];
+
+        foreach ($carts as $cart) {
+            $totalHarga += $cart->produk->harga_produk * $cart->jumlah;
+            $jumlahOrder += $cart->jumlah;
+            $jenisProduk[] = $cart->produk->nama_produk;
+        }
+
+        // Kirim data ke view
+        return view('user.cart.index', [
+            'carts' => $carts,
+            'totalHarga' => $totalHarga,
+            'jumlahOrder' => $jumlahOrder,
+            'jenisProduk' => array_unique($jenisProduk),
+
+        ], compact('orderCount'));
     }
 
     public function remove($id)
