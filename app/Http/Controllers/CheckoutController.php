@@ -94,13 +94,11 @@ class CheckoutController extends Controller
     public function midtransCallback(Request $request)
     {
         $serverKey = config('midtrans.server_key');
-
         // Validasi signature key dari Midtrans
         $signatureKey = hash("sha512", $request->order_id . $request->status_code . $request->gross_amount . $serverKey);
 
         if ($signatureKey === $request->signature_key) {
-            // Ambil order berdasarkan order_id Midtrans
-            $order = Orders::where('order_id', $request->order_id)->first();
+            $order = Orders::find($request->order_id);
 
             if ($order) {
                 // Update status order berdasarkan status transaksi

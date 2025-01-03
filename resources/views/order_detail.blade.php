@@ -26,6 +26,10 @@
             <th>Jenis Pembayaran</th>
             <td>{{ $order->payment_va_name }}</td>
         </tr>
+        <tr>
+            <th>No Rekening</th>
+            <td>{{ $order->payment_va_number }}</td>
+        </tr>
     </table>
 
     <h3>Produk dalam Order</h3>

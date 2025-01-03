@@ -1,74 +1,45 @@
 @extends('layouts.auth')
 
 @section('main-content')
-<div class="container">
-    <div class="row justify-content-center">
-        <div class="col-xl-10 col-lg-12 col-md-9">
-            <div class="card o-hidden border-0 shadow-lg my-5">
-                <div class="card-body p-0">
-                    <div class="row">
-                        <div class="col-lg-6 d-none d-lg-block bg-login-image"></div>
-                        <div class="col-lg-6">
-                            <div class="p-5">
-                                <div class="text-center">
-                                    <h1 class="h4 text-gray-900 mb-4">{{ __('Login') }}</h1>
-                                </div>
-
-                                @if ($errors->any())
-                                <div class="alert alert-danger border-left-danger" role="alert">
-                                    <ul class="pl-4 my-2">
-                                        @foreach ($errors->all() as $error)
-                                        <li>{{ $error }}</li>
-                                        @endforeach
-                                    </ul>
-                                </div>
-                                @endif
-
-                                <form method="POST" action="{{ route('login') }}" class="user">
-                                    <input type="hidden" name="_token" value="{{ csrf_token() }}">
-
-                                    <div class="form-group">
-                                        <input type="email" class="form-control form-control-user" name="email" placeholder="{{ __('E-Mail Address') }}" value="{{ old('email') }}" required autofocus>
-                                    </div>
-
-                                    <div class="form-group">
-                                        <input type="password" class="form-control form-control-user" name="password" placeholder="{{ __('Password') }}" required>
-                                    </div>
-
-                                    <div class="form-group">
-                                        <div class="custom-control custom-checkbox small">
-                                            <input type="checkbox" class="custom-control-input" name="remember" id="remember" {{ old('remember') ? 'checked' : '' }}>
-                                            <label class="custom-control-label" for="remember">{{ __('Remember Me') }}</label>
-                                        </div>
-                                    </div>
-
-                                    <div class="form-group">
-                                        <button type="submit" class="btn btn-primary btn-user btn-block">
-                                            {{ __('Login') }}
-                                        </button>
-                                    </div>
-
-
-
-                                    @if (Route::has('password.request'))
-                                    <div class="text-center">
-                                        <a class="small" href="{{ route('password.request') }}">
-                                            {{ __('Forgot Password?') }}
-                                        </a>
-                                    </div>
-                                    @endif
-
-                                    @if (Route::has('register'))
-                                    <div class="text-center">
-                                        <a class="small" href="{{ route('register') }}">{{ __('Create an Account!') }}</a>
-                                    </div>
-                                    @endif
-                            </div>
-                        </div>
-                    </div>
+<!-- Login Form -->
+<div class="container d-flex justify-content-center align-items-center vh-100">
+    <div class="card shadow-lg" style="width: 400px;">
+        <div class="card-body">
+            <h3 class="card-title text-center mb-4">Login</h3>
+            <form action="{{ route('login') }}" method="POST">
+                @csrf
+                <div class="mb-3">
+                    <label for="email" class="form-label">Email Address</label>
+                    <input type="email" class="form-control" id="email" name="email" value="{{ old('email') }}" required placeholder="Enter your email">
+                    @error('email')
+                    <div class="text-danger mt-2">{{ $message }}</div>
+                    @enderror
                 </div>
+                <div class="mb-3">
+                    <label for="password" class="form-label">Password</label>
+                    <input type="password" class="form-control" id="password" name="password" required placeholder="Enter your password">
+                    @error('password')
+                    <div class="text-danger mt-2">{{ $message }}</div>
+                    @enderror
+                </div>
+                <div class="form-check mb-3">
+                    <input class="form-check-input" type="checkbox" id="remember" name="remember" {{ old('remember') ? 'checked' : '' }}>
+                    <label class="form-check-label" for="remember">
+                        Remember Me
+                    </label>
+                </div>
+                <button type="submit" class="btn btn-primary w-100">Login</button>
+            </form>
+            <div class="mt-3 text-center">
+                <p>Don't have an account? <a href="{{ route('register') }}">Register Here</a></p>
             </div>
         </div>
     </div>
 </div>
+
+
+<!-- Bootstrap JS and dependencies -->
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.min.js"></script>
+
 @endsection

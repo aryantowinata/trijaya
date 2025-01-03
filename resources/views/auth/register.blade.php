@@ -1,72 +1,54 @@
 @extends('layouts.auth')
 
 @section('main-content')
-<div class="container">
-    <div class="row justify-content-center">
-        <div class="col-xl-10 col-lg-12 col-md-9">
-            <div class="card o-hidden border-0 shadow-lg my-5">
-                <div class="card-body p-0">
-                    <div class="row">
-                        <div class="col-lg-6 d-none d-lg-block bg-login-image"></div>
-                        <div class="col-lg-6">
-                            <div class="p-5">
-                                <div class="text-center">
-                                    <h1 class="h4 text-gray-900 mb-4">{{ __('Register') }}</h1>
-                                </div>
+<!-- Register Form -->
+<div class="container d-flex justify-content-center align-items-center vh-100">
+    <div class="card shadow-lg" style="width: 400px;">
+        <div class="card-body">
+            <h3 class="card-title text-center mb-4">Register</h3>
 
-                                @if ($errors->any())
-                                    <div class="alert alert-danger border-left-danger" role="alert">
-                                        <ul class="pl-4 my-2">
-                                            @foreach ($errors->all() as $error)
-                                                <li>{{ $error }}</li>
-                                            @endforeach
-                                        </ul>
-                                    </div>
-                                @endif
-
-                                <form method="POST" action="{{ route('register') }}" class="user">
-                                    <input type="hidden" name="_token" value="{{ csrf_token() }}">
-
-                                    <div class="form-group">
-                                        <input type="text" class="form-control form-control-user" name="name" placeholder="{{ __('Name') }}" value="{{ old('name') }}" required autofocus>
-                                    </div>
-
-                                    <div class="form-group">
-                                        <input type="text" class="form-control form-control-user" name="last_name" placeholder="{{ __('Last Name') }}" value="{{ old('last_name') }}" required>
-                                    </div>
-
-                                    <div class="form-group">
-                                        <input type="email" class="form-control form-control-user" name="email" placeholder="{{ __('E-Mail Address') }}" value="{{ old('email') }}" required>
-                                    </div>
-
-                                    <div class="form-group">
-                                        <input type="password" class="form-control form-control-user" name="password" placeholder="{{ __('Password') }}" required>
-                                    </div>
-
-                                    <div class="form-group">
-                                        <input type="password" class="form-control form-control-user" name="password_confirmation" placeholder="{{ __('Confirm Password') }}" required>
-                                    </div>
-
-                                    <div class="form-group">
-                                        <button type="submit" class="btn btn-primary btn-user btn-block">
-                                            {{ __('Register') }}
-                                        </button>
-                                    </div>
-                                </form>
-
-                                <hr>
-
-                                <div class="text-center">
-                                    <a class="small" href="{{ route('login') }}">
-                                        {{ __('Already have an account? Login!') }}
-                                    </a>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+            <form action="{{ route('register') }}" method="POST">
+                @csrf
+                <div class="mb-3">
+                    <label for="name" class="form-label">Name</label>
+                    <input type="text" class="form-control" id="name" name="name" value="{{ old('name') }}" required placeholder="Enter your name">
+                    @error('name')
+                    <div class="text-danger mt-2">{{ $message }}</div>
+                    @enderror
                 </div>
+                <div class="mb-3">
+                    <label for="last_name" class="form-label">Last Name</label>
+                    <input type="text" class="form-control" id="last_name" name="last_name" value="{{ old('last_name') }}" required placeholder="Enter your last name">
+                    @error('name')
+                    <div class="text-danger mt-2">{{ $message }}</div>
+                    @enderror
+                </div>
+                <div class="mb-3">
+                    <label for="email" class="form-label">Email Address</label>
+                    <input type="email" class="form-control" id="email" name="email" value="{{ old('email') }}" required placeholder="Enter your email">
+                    @error('email')
+                    <div class="text-danger mt-2">{{ $message }}</div>
+                    @enderror
+                </div>
+
+                <div class="mb-3">
+                    <label for="password" class="form-label">Password</label>
+                    <input type="password" class="form-control" id="password" name="password" required placeholder="Enter your password">
+                    @error('password')
+                    <div class="text-danger mt-2">{{ $message }}</div>
+                    @enderror
+                </div>
+                <div class="mb-3">
+                    <label for="password_confirmation" class="form-label">Confirm Password</label>
+                    <input type="password" class="form-control" id="password_confirmation" name="password_confirmation" required placeholder="Confirm your password">
+                </div>
+                <button type="submit" class="btn btn-success w-100">Register</button>
+            </form>
+            <div class="mt-3 text-center">
+                <p>Already have an account? <a href="{{ route('login') }}">Login Here</a></p>
             </div>
         </div>
     </div>
 </div>
+
 @endsection
