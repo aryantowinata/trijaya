@@ -6,13 +6,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Tri Jaya</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
-
+    <link href="{{ asset('img/logo_trijaya.jpeg') }}" rel="icon" type="image/png">
 </head>
 
 <body>
     <nav class="navbar navbar-expand-lg navbar-dark bg-primary fixed-top">
         <div class="container">
-            <img src="https://trijayamarket.my.id/wp-content/uploads/2024/06/WhatsApp_Image_2024-06-26_at_09.34.36-removebg-preview-1-150x150.png" class="attachment-thumbnail size-thumbnail wp-image-5537" alt="" width="48" height="50">
+            <img src="{{ asset('img/logo_trijaya.jpeg') }}" class="attachment-thumbnail size-thumbnail wp-image-5537" alt="" width="48" height="50">
             <a class="navbar-brand" href="#">Tri Jaya</a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>

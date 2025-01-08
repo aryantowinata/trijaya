@@ -29,16 +29,16 @@ class UserDashboardController extends Controller
     public function index()
     {
         $orders = Orders::where('id_user', Auth::id())->count();
-        return view('/user/home', compact('orders'));
+        $username = Auth::user()->username; // Ambil username pengguna yang login  
+        return view('/user/home', compact('orders', 'username'));
     }
-
 
     public function daftar_produk()
     {
         $produks = Produk::all();
         $orderCount = Cart::where('id_user', Auth::id())->count();
+        $username = Auth::user()->username; // Ambil username pengguna yang login  
 
-
-        return view('/user/daftar_produk', compact('produks', 'orderCount'));
+        return view('/user/daftar_produk', compact('produks', 'orderCount', 'username'));
     }
 }

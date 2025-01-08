@@ -25,7 +25,7 @@
     <link href="{{ asset('css/sb-admin-2.min.css') }}" rel="stylesheet">
 
     <!-- Favicon -->
-    <link href="{{ asset('img/favicon.png') }}" rel="icon" type="image/png">
+    <link href="{{ asset('img/logo_trijaya.jpeg') }}" rel="icon" type="image/png">
 </head>
 
 <body id="page-top">
@@ -36,11 +36,12 @@
         <ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar">
 
             <!-- Sidebar - Brand -->
+            <!-- Sidebar - Brand -->
             <a class="sidebar-brand d-flex align-items-center justify-content-center" href="{{ url('/home') }}">
-                <div class="sidebar-brand-icon rotate-n-15">
-                    <i class="fas fa-laugh-wink"></i>
+                <div class="sidebar-brand-icon ">
+                    <img src="{{ asset('img/logo_trijaya.jpeg') }}" alt="Logo" style="width: 40px; height: 40px;"> <!-- Ganti ikon dengan logo -->
                 </div>
-                <div class="sidebar-brand-text mx-3">Admin </div>
+                <div class="sidebar-brand-text mx-3">{{ Auth::user()->name }}</div>
             </a>
 
             <!-- Divider -->
@@ -188,7 +189,7 @@
             <footer class="sticky-footer bg-white">
                 <div class="container my-auto">
                     <div class="copyright text-center my-auto">
-                        <span>Copyright &copy; <a href="https://github.com/aleckrh" target="_blank">Aleckrh</a> {{ now()->year }}</span>
+                        <span>Copyright &copy; <a href="https://github.com/aleckrh" target="_blank">Trijaya</a> {{ now()->year }}</span>
                     </div>
                 </div>
             </footer>
